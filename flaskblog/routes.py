@@ -83,9 +83,13 @@ def account():
         if form.picture.data:
             old_picture = current_user.image_file
             picture_file = save_picture(form.picture.data)
-            current_user.image_file = picture_file
-            if old_picture != 'default.jpg':
-                os.remove('{}/flaskblog/static/profile_pics/{}'.format(os.getcwd(), old_picture))
+            try:
+                current_user.image_file = picture_file
+                if old_picture != 'default.jpg':
+                    os.remove('{}/static/profile_pics/{}'.format(app.root_path, old_picture))
+            except Exception:
+                flash('Something went wrong', 'danger')
+                return redirect(url_for('account'))
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()

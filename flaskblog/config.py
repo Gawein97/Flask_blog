@@ -4,7 +4,7 @@ import os
 class Configuration(object):
 
     DEBUG = True
-    SECRET_KEY = os.environ.get('SECRET_KEY') # TODO изменить и добавить в переменные среды
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db?check_same_thread=False'
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
