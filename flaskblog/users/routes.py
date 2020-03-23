@@ -1,4 +1,5 @@
 import os
+# import logging
 from flask import Blueprint, render_template, url_for, flash, redirect, request, current_app
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskblog import db, bcrypt
@@ -6,6 +7,16 @@ from flaskblog.models import User, Post
 from flaskblog.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                     RequestResetForm, ResetPasswordForm)
 from flaskblog.users.utils import save_picture, send_reset_email
+
+# logger = logging.getLogger(__name__)
+# logger.setLevel(logging.INFO)
+
+# formatter = logging.Formatter('%(asctime)s] %(levelname)s in %(module)s: %(message)s')
+# file_handler = logging.FileHandler('users.log')
+# file_handler.setLevel(logging.ERROR)
+# file_handler.setFormatter(formatter)
+
+# logger.addHandler(file_handler)
 
 
 users = Blueprint('users', __name__)
@@ -36,6 +47,7 @@ def login():
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             flash(f'Welcome Back {user.username}!', 'info')
+            current_app.logger.info(f'{user.username} logged in successfully')
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -56,13 +68,18 @@ def account():
         if form.picture.data:
             old_picture = current_user.image_file
             try:
-                picture_file = save_picture(form.picture.data)
-                current_user.image_file = picture_file
                 if old_picture != 'default.jpg':
                     os.remove('{}/static/profile_pics/{}'.format(current_app.root_path, old_picture))
+            except OSError:
+                print('No file')
+                picture_file = save_picture(form.picture.data)
+                current_user.image_file = picture_file
             except Exception:
                 flash('Something went wrong', 'danger')
                 return redirect(url_for('users.account'))
+            else:
+                picture_file = save_picture(form.picture.data)
+                current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()

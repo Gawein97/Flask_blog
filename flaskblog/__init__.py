@@ -4,9 +4,11 @@ from flaskblog.config import Configuration
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_migrate import Migrate
 
 
 db = SQLAlchemy()
+migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
@@ -20,6 +22,7 @@ def create_app(config_class=Configuration):
     app.config.from_object(Configuration)
 
     db.init_app(app)
+    migrate.init_app(app, db)
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
@@ -37,10 +40,14 @@ def create_app(config_class=Configuration):
 
 
 # TODO: добавить WhiteList доступных для регистрации email'ов
+# TODO: Добавить логгирование
+# TODO: Добавить тестирование
+# TODO: Добавить Миграции
+# TODO: Добавить ассоциативную таблицу many-to-many для тегов
 # TODO: Добавить теги к постам
-# TODO: Добавить поисковый движок
+# TODO: Добавить поисковый движок по тексту поста
 # TODO: Добавить в сайдбар категории и сортировку по ним( через теги я так полагаю)
 # TODO: Добавить дропзону в посты для картинок (FLASK-Dropzone?)
 # TODO: Добавить админку (FLASK-Admin)
 # TODO: Изменить стили
-# TODO: Добавить календарь
+# TODO: Добавить календарь.
