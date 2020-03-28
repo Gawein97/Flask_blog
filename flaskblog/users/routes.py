@@ -8,16 +8,6 @@ from flaskblog.users.forms import (RegistrationForm, LoginForm, UpdateAccountFor
                                     RequestResetForm, ResetPasswordForm)
 from flaskblog.users.utils import save_picture, send_reset_email
 
-# logger = logging.getLogger(__name__)
-# logger.setLevel(logging.INFO)
-
-# formatter = logging.Formatter('%(asctime)s] %(levelname)s in %(module)s: %(message)s')
-# file_handler = logging.FileHandler('users.log')
-# file_handler.setLevel(logging.ERROR)
-# file_handler.setFormatter(formatter)
-
-# logger.addHandler(file_handler)
-
 
 users = Blueprint('users', __name__)
 
